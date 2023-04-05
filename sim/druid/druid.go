@@ -32,6 +32,8 @@ type Druid struct {
 
 	ReplaceBearMHFunc core.ReplaceMHSwing
 
+	// TODO: add other healing spells
+
 	Barkskin             *core.Spell
 	Berserk              *core.Spell
 	DemoralizingRoar     *core.Spell
@@ -41,6 +43,7 @@ type Druid struct {
 	ForceOfNature        *core.Spell
 	FrenziedRegeneration *core.Spell
 	Hurricane            *core.Spell
+	HealingTouch         *core.Spell
 	InsectSwarm          *core.Spell
 	GiftOfTheWild        *core.Spell
 	Lacerate             *core.Spell
@@ -244,6 +247,12 @@ func (druid *Druid) RegisterFeralTankSpells(maulRageThreshold float64) {
 	druid.registerSurvivalInstinctsCD()
 	druid.registerSwipeBearSpell()
 }
+
+func (druid *Druid) RegisterRestorationSpells() {
+		// TODO: add other healing spells
+	druid.registerHealingTouchSpell()
+}
+
 
 func (druid *Druid) Reset(_ *core.Simulation) {
 	druid.BleedsActive = 0

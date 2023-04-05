@@ -7,7 +7,7 @@ import (
 )
 
 func (druid *Druid) registerHealingTouchSpell() {
-	spellCoeff := 1.61 + 0.08*float64(priest.Talents.EmpoweredTouch)
+	spellCoeff := 1.61 + 0.08*float64(druid.Talents.EmpoweredTouch)
 
 	druid.HealingTouch = druid.RegisterSpell(core.SpellConfig{
 		ActionID:    core.ActionID{SpellID: 48378},
@@ -30,7 +30,7 @@ func (druid *Druid) registerHealingTouchSpell() {
             2*float64(druid.Talents.NaturesMajesty)*core.CritRatingPerCritChance +
             1*float64(druid.Talents.NaturalPerfection)*core.CritRatingPerCritChance,
 		DamageMultiplier: 1 *
-			(1 + .02*float64(priest.Talents.GiftOfNature)),
+			(1 + .02*float64(druid.Talents.GiftOfNature)),
 		CritMultiplier:   druid.DefaultHealingCritMultiplier(),
 		ThreatMultiplier: 1,
 

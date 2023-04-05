@@ -47,10 +47,10 @@ var StandardGlyphs = &proto.Glyphs{
 }
 
 var FullConsumes = &proto.Consumes{
-	Flask:           proto.Flask_FlaskOfBlindingLight,
-	Food:            proto.Food_FoodBlackenedBasilisk,
+	Flask:           proto.Flask_FlaskOfTheFrostWyrm,
+	Food:            proto.Food_FoodFishFeast,
 	DefaultPotion:   proto.Potions_SuperManaPotion,
-	PrepopPotion:    proto.Potions_DestructionPotion,
+	PrepopPotion:    proto.Potions_PotionOfWildMagic,
 	DefaultConjured: proto.Conjured_ConjuredDarkRune,
 }
 

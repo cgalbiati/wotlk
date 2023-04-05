@@ -1,5 +1,7 @@
 import {
 	Consumes,
+	CustomRotation,
+	CustomSpell,
 	Debuffs,
 	EquipmentSpec,
 	Flask,
@@ -16,7 +18,9 @@ import {SavedTalents} from '../core/proto/ui.js';
 
 import {
 	RestorationDruid_Options as RestorationDruidOptions,
-	RestorationDruid_Rotation as RestorationDruidRotation,
+    RestorationDruid_Rotation as RestorationDruidRotation,
+    RestorationDruid_Rotation_RotationType as RotationType,
+    RestorationDruid_Rotation_SpellOption as SpellOption,
 	DruidMajorGlyph,
 	DruidMinorGlyph,
 } from '../core/proto/druid.js';
@@ -30,48 +34,58 @@ import {NO_TARGET} from "../core/proto_utils/utils";
 
 // Default talents. Uses the wowhead calculator format, make the talents on
 // https://wowhead.com/wotlk/talent-calc and copy the numbers in the url.
-export const CelestialFocusTalents = {
-	name: 'Celestial Focus',
+// TODO: make these for tree instead of chicken
+export const Phase1Talents = {
+	name: 'Phase 1',
 	data: SavedTalents.create({
 		talentsString: '05320031103--230023312131502331050313051',
 		glyphs: Glyphs.create({
 			major1: DruidMajorGlyph.GlyphOfWildGrowth,
 			major2: DruidMajorGlyph.GlyphOfSwiftmend,
 			major3: DruidMajorGlyph.GlyphOfNourish,
+			minor1: DruidMinorGlyph.GlyphOfTyphoon,
 			minor2: DruidMinorGlyph.GlyphOfUnburdenedRebirth,
 			minor3: DruidMinorGlyph.GlyphOfTheWild,
-			minor1: DruidMinorGlyph.GlyphOfDash,
 		}),
 	}),
 };
-export const ThiccRestoTalents = {
-	name: 'Thicc Resto',
+
+export const Phase2Talents = {
+	name: 'Phase 2',
 	data: SavedTalents.create({
-		talentsString: '05320001--230023312331502531053313051',
+		talentsString: '05320031103--230023312131502331050313051',
 		glyphs: Glyphs.create({
 			major1: DruidMajorGlyph.GlyphOfWildGrowth,
 			major2: DruidMajorGlyph.GlyphOfSwiftmend,
 			major3: DruidMajorGlyph.GlyphOfNourish,
+			minor1: DruidMinorGlyph.GlyphOfTyphoon,
 			minor2: DruidMinorGlyph.GlyphOfUnburdenedRebirth,
 			minor3: DruidMinorGlyph.GlyphOfTheWild,
-			minor1: DruidMinorGlyph.GlyphOfDash,
 		}),
 	}),
 };
 
 export const DefaultRotation = RestorationDruidRotation.create({
+	type: RotationType.Cycle,
+    customRotation: CustomRotation.create({
+        spells: [
+        // TODO: add the other spells
+            CustomSpell.create({ spell: SpellOption.HealingTouch, castsPerMinute: 18 }),
+        ],
+    }),
 });
 
 export const DefaultOptions = RestorationDruidOptions.create({
 	innervateTarget: RaidTarget.create({
-		targetIndex: NO_TARGET,
+		targetIndex: NO_TARGET, // In an individual sim the 0-indexed player is ourself.
 	}),
 });
 
 export const DefaultConsumes = Consumes.create({
-	defaultPotion: Potions.RunicManaPotion,
-	flask: Flask.FlaskOfTheFrostWyrm,
-	food: Food.FoodFishFeast,
+    defaultPotion: Potions.SuperManaPotion,
+    flask: Flask.FlaskOfTheFrostWyrm,
+    food: Food.FoodFishFeast,
+    prepopPotion: Potions.PotionOfWildMagic,
 });
 
 export const DefaultRaidBuffs = RaidBuffs.create({
@@ -87,6 +101,7 @@ export const DefaultRaidBuffs = RaidBuffs.create({
 	strengthOfEarthTotem: TristateEffect.TristateEffectImproved,
 	trueshotAura: true,
 	wrathOfAirTotem: true,
+	demonicPact: 500,
 });
 
 export const DefaultIndividualBuffs = IndividualBuffs.create({
@@ -115,94 +130,123 @@ export const OtherDefaults = {
 	distanceFromTarget: 18,
 };
 
-export const PRE_RAID_PRESET = {
-	name: 'Pre-raid Preset',
+// TODO add correct gear for tree instead of chicken
+export const P2_PRESET = {
+	name: 'P2 Preset',
 	tooltip: Tooltips.BASIC_BIS_DISCLAIMER,
-	gear: EquipmentSpec.fromJsonString(`{ "items": [
-		{
-			"id": 37149,
-			"enchant": 3819,
-			"gems": [
-				41401,
-				40051
-			]
-		},
-		{
-			"id": 42339,
-			"gems": [
-				40026
-			]
-		},
-		{
-			"id": 37673,
-			"enchant": 3809,
-			"gems": [
-				39998
-			]
-		},
-		{
-			"id": 41610,
-			"enchant": 3831
-		},
-		{
-			"id": 42102,
-			"enchant": 3832
-		},
-		{
-			"id": 37361,
-			"enchant": 2332,
-			"gems": [
-				0
-			]
-		},
-		{
-			"id": 42113,
-			"enchant": 3246,
-			"gems": [
-				0
-			]
-		},
-		{
-			"id": 37643,
-			"enchant": 3601,
-			"gems": [
-				39998
-			]
-		},
-		{
-			"id": 37791,
-			"enchant": 3719
-		},
-		{
-			"id": 44202,
-			"enchant": 3232,
-			"gems": [
-				39998
-			]
-		},
-		{
-			"id": 37694
-		},
-		{
-			"id": 37192
-		},
-		{
-			"id": 37111
-		},
-		{
-			"id": 37657
-		},
-		{
-			"id": 37169,
-			"enchant": 3834
-		},
-		{
-			"id": 40699
-		},
-		{
-			"id": 33508
-		}
-	]}`),
+	gear: EquipmentSpec.fromJsonString(` {
+      "items": [
+        {
+          "id": 45497,
+          "enchant": 3820,
+          "gems": [
+            41285,
+            42144
+          ]
+        },
+        {
+          "id": 45133,
+          "gems": [
+            40048
+          ]
+        },
+        {
+          "id": 46196,
+          "enchant": 3810,
+          "gems": [
+            39998
+          ]
+        },
+        {
+          "id": 45242,
+          "enchant": 3859,
+          "gems": [
+            40048
+          ]
+        },
+        {
+          "id": 45519,
+          "enchant": 3832,
+          "gems": [
+            40051,
+            42144,
+            40026
+          ]
+        },
+        {
+          "id": 45446,
+          "enchant": 2332,
+          "gems": [
+            42144,
+            0
+          ]
+        },
+        {
+          "id": 45665,
+          "enchant": 3604,
+          "gems": [
+            39998,
+            39998,
+            0
+          ]
+        },
+        {
+          "id": 45619,
+          "gems": [
+            39998,
+            39998,
+            39998
+          ]
+        },
+        {
+          "id": 46192,
+          "enchant": 3719,
+          "gems": [
+            39998,
+            39998
+          ]
+        },
+        {
+          "id": 45537,
+          "enchant": 3606,
+          "gems": [
+            39998,
+            40026
+          ]
+        },
+        {
+          "id": 46046,
+          "gems": [
+            39998
+          ]
+        },
+        {
+          "id": 45495,
+          "gems": [
+            39998
+          ]
+        },
+        {
+          "id": 45466
+        },
+        {
+          "id": 45518
+        },
+        {
+          "id": 45620,
+          "enchant": 3834,
+          "gems": [
+            39998
+          ]
+        },
+        {
+          "id": 45617
+        },
+        {
+          "id": 40321
+        }
+      ]
+    }`),
 };
 
 export const P1_PRESET = {
@@ -299,114 +343,99 @@ export const P1_PRESET = {
 	]}`),
 };
 
-export const P2_PRESET = {
-	name: 'P2 Preset',
+export const PRE_RAID_PRESET = {
+	name: 'Pre-raid Preset',
 	tooltip: Tooltips.BASIC_BIS_DISCLAIMER,
-	gear: EquipmentSpec.fromJsonString(`{"items": [
+	gear: EquipmentSpec.fromJsonString(`{ "items": [
 		{
-			"id": 46184,
-			"enchant": 3819,
+			"id": 42554,
+			"enchant": 3820,
 			"gems": [
-				41401,
-				39998
+				41285,
+				40049
 			]
 		},
 		{
-			"id": 45243,
+			"id": 40680
+		},
+		{
+			"id": 37673,
+			"enchant": 3810,
 			"gems": [
-				39998
+				42144
 			]
 		},
 		{
-			"id": 46187,
-			"enchant": 3809,
-			"gems": [
-				39998
-			]
+			"id": 41610,
+			"enchant": 3859
 		},
 		{
-			"id": 45618,
-			"enchant": 3831,
-			"gems": [
-				39998
-			]
-		},
-		{
-			"id": 45519,
+			"id": 39547,
 			"enchant": 3832,
 			"gems": [
-				40017,
-				39998,
+				42144,
 				40026
 			]
 		},
 		{
-			"id": 45446,
+			"id": 37884,
 			"enchant": 2332,
 			"gems": [
-				39998,
 				0
 			]
 		},
 		{
-			"id": 46183,
-			"enchant": 3246,
+			"id": 39544,
+			"enchant": 3604,
 			"gems": [
-				39998,
+				42144,
 				0
 			]
 		},
 		{
-			"id": 45616,
+			"id": 40696,
+			"enchant": 3601,
 			"gems": [
-				39998,
-				39998,
+				40014,
 				39998
 			]
 		},
 		{
-			"id": 46185,
-			"enchant": 3719,
-			"gems": [
-				40026,
-				39998
-			]
+			"id": 37854,
+			"enchant": 3719
 		},
 		{
-			"id": 45135,
+			"id": 44202,
 			"enchant": 3606,
 			"gems": [
-				39998,
-				40017
+				39998
 			]
 		},
 		{
-			"id": 45495,
+			"id": 40585
+		},
+		{
+			"id": 43253,
 			"gems": [
-				40017
+				40026
 			]
 		},
 		{
-			"id": 45946,
-			"gems": [
-				40017
-			]
+			"id": 37873
 		},
 		{
-			"id": 45703
+			"id": 40682
 		},
 		{
-			"id": 45535
-		},
-		{
-			"id": 46017,
+			"id": 45085,
 			"enchant": 3834
 		},
 		{
-			"id": 45271
+			"id": 40698
 		},
 		{
-			"id": 40342
+			"id": 40712
 		}
 	]}`),
 };
+

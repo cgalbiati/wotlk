@@ -8,7 +8,8 @@ import { EventID, TypedEvent } from '../core/typed_event.js';
 import * as InputHelpers from '../core/components/input_helpers.js';
 
 import {
-	RestorationDruid_Options as DruidOptions,
+	RestorationDruid_Rotation_RotationType as RotationType,
+	RestorationDruid_Rotation_SpellOption as SpellOption,
 } from '../core/proto/druid.js';
 
 
@@ -32,6 +33,23 @@ export const SelfInnervate = InputHelpers.makeSpecOptionsBooleanIconInput<Spec.S
 });
 
 export const RestorationDruidRotationConfig = {
-	inputs: [
-	],
+		inputs: [
+    		InputHelpers.makeRotationEnumInput<Spec.SpecRestorationDruid, RotationType>({
+    			fieldName: 'type',
+    			label: 'Type',
+    			values: [
+    				{ name: 'Cycle', value: RotationType.Cycle },
+    				{ name: 'Custom', value: RotationType.Custom },
+    			],
+    		}),
+    		InputHelpers.makeCustomRotationInput<Spec.SpecRestorationDruid, SpellOption>({
+    			fieldName: 'customRotation',
+    			numColumns: 2,
+    			showCastsPerMinute: true,
+    			values: [
+    				{ actionId: ActionId.fromSpellId(48378), value: SpellOption.HealingTouch },
+    			],
+    			showWhen: (player: Player<Spec.SpecRestorationDruid>) => player.getRotation().type == RotationType.Custom,
+    		}),
+		],
 };

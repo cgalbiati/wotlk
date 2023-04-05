@@ -292,7 +292,7 @@ export const playerPresets: Array<PresetSpecSettings<any>> = [
 	{
 		spec: Spec.SpecRestorationDruid,
 		rotation: RestorationDruidPresets.DefaultRotation,
-		talents: RestorationDruidPresets.CelestialFocusTalents.data,
+		talents: RestorationDruidPresets.Phase2Talents.data,
 		specOptions: RestorationDruidPresets.DefaultOptions,
 		consumes: RestorationDruidPresets.DefaultConsumes,
 		defaultName: 'Restoration',

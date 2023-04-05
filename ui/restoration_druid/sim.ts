@@ -10,12 +10,13 @@ import * as OtherInputs from '../core/components/other_inputs.js';
 import * as DruidInputs from './inputs.js';
 import * as Presets from './presets.js';
 
+// noinspection TypeScriptValidateTypes
 export class RestorationDruidSimUI extends IndividualSimUI<Spec.SpecRestorationDruid> {
 	constructor(parentElem: HTMLElement, player: Player<Spec.SpecRestorationDruid>) {
 		super(parentElem, player, {
 			cssClass: 'restoration-druid-sim-ui',
 			cssScheme: 'druid',
-			// List any known bugs / issues here and they'll be shown on the site.
+			// List any known bugs / issues here, and they'll be shown on the site.
 			knownIssues: [
 			],
 
@@ -24,6 +25,7 @@ export class RestorationDruidSimUI extends IndividualSimUI<Spec.SpecRestorationD
 				Stat.StatIntellect,
 				Stat.StatSpirit,
 				Stat.StatSpellPower,
+				Stat.StatSpellHit,
 				Stat.StatSpellCrit,
 				Stat.StatSpellHaste,
 				Stat.StatMP5,
@@ -33,11 +35,11 @@ export class RestorationDruidSimUI extends IndividualSimUI<Spec.SpecRestorationD
 			// Which stats to display in the Character Stats section, at the bottom of the left-hand sidebar.
 			displayStats: [
 				Stat.StatHealth,
-				Stat.StatMana,
 				Stat.StatStamina,
 				Stat.StatIntellect,
 				Stat.StatSpirit,
 				Stat.StatSpellPower,
+				Stat.StatSpellHit,
 				Stat.StatSpellCrit,
 				Stat.StatSpellHaste,
 				Stat.StatMP5,
@@ -45,33 +47,29 @@ export class RestorationDruidSimUI extends IndividualSimUI<Spec.SpecRestorationD
 
 			defaults: {
 				// Default equipped gear.
-				gear: Presets.P1_PRESET.gear,
+				gear: Presets.P2_PRESET.gear,
 				// Default EP weights for sorting gear in the gear picker.
 				epWeights: Stats.fromMap({
-					[Stat.StatIntellect]: 0.38,
-					[Stat.StatSpirit]: 0.34,
+					[Stat.StatIntellect]: 0.2,
+					[Stat.StatSpirit]: 0.6,
 					[Stat.StatSpellPower]: 1,
-					[Stat.StatSpellCrit]: 0.69,
-					[Stat.StatSpellHaste]: 0.77,
-					[Stat.StatMP5]: 0.00,
+					[Stat.StatSpellCrit]: 0.1,
+					[Stat.StatSpellHaste]: 1.1,
+					[Stat.StatMP5]: 0.8,
 				}),
 				// Default consumes settings.
 				consumes: Presets.DefaultConsumes,
 				// Default rotation settings.
 				rotation: Presets.DefaultRotation,
 				// Default talents.
-				talents: Presets.CelestialFocusTalents.data,
+				talents: Presets.Phase2Talents.data,
 				// Default spec-specific settings.
 				specOptions: Presets.DefaultOptions,
 				// Default raid/party buffs settings.
 				raidBuffs: Presets.DefaultRaidBuffs,
-
 				partyBuffs: Presets.DefaultPartyBuffs,
-
 				individualBuffs: Presets.DefaultIndividualBuffs,
-
 				debuffs: Presets.DefaultDebuffs,
-
 				other: Presets.OtherDefaults,
 			},
 
@@ -83,6 +81,13 @@ export class RestorationDruidSimUI extends IndividualSimUI<Spec.SpecRestorationD
 			rotationInputs: DruidInputs.RestorationDruidRotationConfig,
 			// Buff and Debuff inputs to include/exclude, overriding the EP-based defaults.
 			includeBuffDebuffInputs: [
+				IconInputs.MeleeHasteBuff,
+				IconInputs.MeleeCritBuff,
+				IconInputs.AttackPowerPercentBuff,
+				IconInputs.AttackPowerBuff,
+				IconInputs.MajorArmorDebuff,
+				IconInputs.MinorArmorDebuff,
+				IconInputs.PhysicalDamageDebuff,
 			],
 			excludeBuffDebuffInputs: [
 			],
@@ -90,6 +95,7 @@ export class RestorationDruidSimUI extends IndividualSimUI<Spec.SpecRestorationD
 			otherInputs: {
 				inputs: [
 					OtherInputs.TankAssignment,
+					OtherInputs.DistanceFromTarget,
 				],
 			},
 			encounterPicker: {
@@ -100,8 +106,8 @@ export class RestorationDruidSimUI extends IndividualSimUI<Spec.SpecRestorationD
 			presets: {
 				// Preset talents that the user can quickly select.
 				talents: [
-					Presets.CelestialFocusTalents,
-					Presets.ThiccRestoTalents,
+					Presets.Phase1Talents,
+					Presets.Phase2Talents,
 				],
 				// Preset gear configurations that the user can quickly select.
 				gear: [

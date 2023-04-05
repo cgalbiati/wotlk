@@ -255,12 +255,30 @@ message FeralTankDruid {
 }
 
 message RestorationDruid {
-  message Rotation {
-  }
-  Rotation rotation = 1;
+	message Rotation {
+		enum RotationType {
+			UnknownType = 0;
+			Cycle = 1;
+			Custom = 2;
+		}
+		RotationType type = 1;
 
-  message Options {
-    RaidTarget innervate_target = 1;
-  }
-  Options options = 3;
+		enum SpellOption {
+			NoSpell = 0;
+			Rejuvenation = 1;
+			Regrowth = 2;
+			WildGrowth = 3;
+			Nourish = 4;
+			HealingTouch = 5;
+			Lifebloom = 6;
+			Swiftmend = 7;
+		}
+		CustomRotation custom_rotation = 2;
+	}
+	Rotation rotation = 1;
+	
+	message Options {
+		RaidTarget innervate_target = 1;
+	}
+	Options options = 3;
 }

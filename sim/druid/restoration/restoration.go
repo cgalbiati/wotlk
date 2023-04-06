@@ -1,6 +1,7 @@
 package restoration
 
 import (
+	"github.com/wowsims/wotlk/sim/common"
 	"github.com/wowsims/wotlk/sim/core"
 	"github.com/wowsims/wotlk/sim/core/proto"
 	"github.com/wowsims/wotlk/sim/druid"
@@ -30,6 +31,7 @@ func NewRestorationDruid(character core.Character, options *proto.Player) *Resto
 	resto := &RestorationDruid{
 		Druid:    druid.New(character, druid.Tree, selfBuffs, options.TalentsString),
 		Rotation: restoOptions.Rotation,
+		Options:  restoOptions.Options,
 	}
 
 	resto.SelfBuffs.InnervateTarget = &proto.RaidTarget{TargetIndex: -1}
@@ -44,15 +46,43 @@ func NewRestorationDruid(character core.Character, options *proto.Player) *Resto
 type RestorationDruid struct {
 	*druid.Druid
 
-	Rotation *proto.RestorationDruid_Rotation
+	Rotation       *proto.RestorationDruid_Rotation
+	CustomRotation *common.CustomRotation
+	Options        *proto.RestorationDruid_Options
+
+	// Spells to rotate through for cyclic rotation.
+	spellCycle     []*core.Spell
+	nextCycleIndex int
 }
 
 func (resto *RestorationDruid) GetDruid() *druid.Druid {
 	return resto.Druid
 }
 
+func (resto *RestorationDruid) GetMainTarget() *core.Unit {
+	target := resto.Env.Raid.GetFirstTargetDummy()
+	if target == nil {
+		return &resto.Unit
+	} else {
+		return &target.Unit
+	}
+}
+
 func (resto *RestorationDruid) Initialize() {
+	resto.CurrentTarget = resto.GetMainTarget()
 	resto.Druid.Initialize()
+	resto.Druid.RegisterRestorationSpells()
+
+	if resto.Rotation.Type == proto.RestorationDruid_Rotation_Custom {
+		resto.CustomRotation = resto.makeCustomRotation()
+	}
+
+	if resto.CustomRotation == nil {
+		resto.Rotation.Type = proto.RestorationDruid_Rotation_Cycle
+		resto.spellCycle = []*core.Spell{
+			resto.HealingTouch,
+		}
+	}
 }
 
 func (resto *RestorationDruid) Reset(sim *core.Simulation) {
